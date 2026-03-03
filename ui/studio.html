@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE-Step // NEXUS</title>
+    <title>Ace Step on Akash - AI Music Generation</title>
     <script src="https://unpkg.com/wavesurfer.js@7"></script>
     <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-primary: #0a0a0f;
             --bg-secondary: #111118;
             --bg-tertiary: #1a1a24;
-            --accent-primary: #00d8ff;
-            --accent-secondary: #0099ff;
+            --accent-primary: #00c2ff; /* Akash blue */
+            --accent-secondary: #0088cc;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
             --text-muted: #6b6b8f;
-            --border: rgba(0, 216, 255, 0.2);
+            --border: rgba(0, 194, 255, 0.2);
             --success: #00ff9d;
             --warning: #ffcc00;
             --error: #ff4d6d;
-            --glow: 0 0 15px rgba(0, 216, 255, 0.5);
+            --glow: 0 0 15px rgba(0, 194, 255, 0.5);
         }
 
         * {
@@ -42,7 +43,7 @@
             overflow: hidden;
             background-image:
                 radial-gradient(circle at 15% 50%, rgba(0, 152, 255, 0.05) 0%, transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(0, 216, 255, 0.03) 0%, transparent 25%);
+                radial-gradient(circle at 85% 30%, rgba(0, 194, 255, 0.03) 0%, transparent 25%);
         }
 
         /* --- Header --- */
@@ -56,15 +57,34 @@
             backdrop-filter: blur(10px);
         }
 
-        .app-title {
+        .logo-container {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+        }
+
+        .akash-logo {
+            width: 32px;
+            height: 32px;
+        }
+
+        .app-title {
+            display: flex;
+            flex-direction: column;
             font-weight: 700;
-            font-size: 1.1rem;
             letter-spacing: 1px;
+        }
+
+        .app-name {
             color: var(--accent-primary);
             text-shadow: var(--glow);
+            font-size: 1.2rem;
+        }
+
+        .app-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 2px;
         }
 
         .api-input {
@@ -257,7 +277,7 @@
         .file-upload-label:hover {
             border-color: var(--accent-primary);
             color: var(--accent-primary);
-            background: rgba(0, 216, 255, 0.05);
+            background: rgba(0, 194, 255, 0.05);
         }
 
         .generate-btn {
@@ -273,10 +293,25 @@
             transition: all 0.2s ease;
             letter-spacing: 0.5px;
             margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        .generate-btn:hover::before {
+            left: 100%;
         }
         .generate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 216, 255, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 194, 255, 0.4);
         }
         .generate-btn:active {
             transform: translateY(0);
@@ -497,6 +532,42 @@
             border-color: var(--accent-primary);
         }
 
+        /* Footer */
+        footer {
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-logo {
+            height: 20px;
+            width: auto;
+        }
+
         /* --- Responsive Design --- */
         @media (max-width: 968px) {
             .main-container {
@@ -519,6 +590,11 @@
             #apiBase {
                 width: 100%;
             }
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
         }
         .hidden { display: none; }
         .empty { display: none; }
@@ -527,7 +603,13 @@
 <body>
 
 <header>
-    <div class="app-title">ACE-Step // NEXUS INTERFACE</div>
+    <div class="logo-container">
+        <img src="https://akash.network/_astro/akash-logo-dark.BKNndxBB_Z21Sx4b.svg" alt="Akash Network" class="akash-logo">
+        <div class="app-title">
+            <span class="app-name">ACE-STEP</span>
+            <span class="app-subtitle">ON AKASH NETWORK</span>
+        </div>
+    </div>
     <div class="api-input">
         <label for="apiBase">API ENDPOINT:</label>
         <input type="url" id="apiBase" value="http://localhost:8001" placeholder="http://your-akash-ip">
@@ -623,7 +705,7 @@
         </div>
 
         <!-- Generate Button -->
-        <button id="submitBtn" class="generate-btn">⟳ GENERATE</button>
+        <button id="submitBtn" class="generate-btn"><i class="fas fa-magic"></i> GENERATE MUSIC</button>
     </aside>
 
     <main class="content-area">
@@ -632,9 +714,9 @@
             <div class="waveform-header">
                 <div class="waveform-title">REFERENCE AUDIO</div>
                 <div class="transport-controls">
-                    <button id="wsLoopBtn" class="control-btn" title="Toggle Loop">🔁</button>
-                    <button id="wsStopBtn" class="control-btn" title="Stop">⏹</button>
-                    <button id="wsPlayBtn" class="control-btn main" title="Play/Pause">▶</button>
+                    <button id="wsLoopBtn" class="control-btn" title="Toggle Loop"><i class="fas fa-repeat"></i></button>
+                    <button id="wsStopBtn" class="control-btn" title="Stop"><i class="fas fa-stop"></i></button>
+                    <button id="wsPlayBtn" class="control-btn main" title="Play/Pause"><i class="fas fa-play"></i></button>
                     <span id="wsTimeDisplay" class="time-display">0:00</span>
                 </div>
             </div>
@@ -665,6 +747,24 @@
         </div>
     </main>
 </div>
+
+<footer>
+    <div class="footer-links">
+        <a href="https://akash.network/" target="_blank">
+            <img src="https://akash.network/_astro/akash-logo-dark.BKNndxBB_Z21Sx4b.svg" alt="Akash Network" class="footer-logo">
+            Powered by Akash Network
+        </a>
+        <a href="https://discord.gg/akash" target="_blank">
+            <i class="fab fa-discord"></i> Discord
+        </a>
+        <a href="https://twitter.com/akashnet_" target="_blank">
+            <i class="fab fa-twitter"></i> Twitter
+        </a>
+    </div>
+    <div>
+        ACE-Step AI Music Generation on Akash DeCloud
+    </div>
+</footer>
 
 <script>
     // --- Configuration ---
@@ -888,10 +988,10 @@
             elements.wsTimeDisplay.innerText = `${formatTime(time)} / ${formatTime(dur)}`;
         });
 
-        wavesurfer.on('play', () => elements.wsPlayBtn.innerText = "⏸");
-        wavesurfer.on('pause', () => elements.wsPlayBtn.innerText = "▶");
+        wavesurfer.on('play', () => elements.wsPlayBtn.innerHTML = "<i class='fas fa-pause'></i>");
+        wavesurfer.on('pause', () => elements.wsPlayBtn.innerHTML = "<i class='fas fa-play'></i>");
         wavesurfer.on('finish', () => {
-            elements.wsPlayBtn.innerText = "▶";
+            elements.wsPlayBtn.innerHTML = "<i class='fas fa-play'></i>";
             if(elements.wsLoopBtn.classList.contains('active')) wavesurfer.play();
         });
 
@@ -949,7 +1049,7 @@
         const file = e.target.files[0];
         if (!file) return;
         uploadedFile = file;
-        elements.uploadLabel.innerText = "✅ " + file.name;
+        elements.uploadLabel.innerHTML = "<span>✅ " + file.name + "</span>";
         elements.uploadLabel.style.borderColor = "var(--accent-primary)";
         elements.uploadLabel.style.color = "var(--accent-primary)";
         elements.waveformWrapper.classList.remove('empty');
@@ -1136,13 +1236,15 @@
                     // Update Smart Target
                     updateProgressTarget(task.progress_text);
 
-                    if (task.status === 1) { // Success
+                    if (task.status === 1) // Success
+                    {
                         clearInterval(timer);
                         stopSmartProgressBar(); // Force to 100%
                         log("Done!", "log-success");
                         handleSuccess(task);
                         elements.submitBtn.disabled = false;
-                    } else if (task.status === 2) { // Failed
+                    } else if (task.status === 2) // Failed
+                    {
                         clearInterval(timer);
                         stopSmartProgressBar();
                         log("Task Failed.", "log-error");
