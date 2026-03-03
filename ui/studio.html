@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACE-Step Nexus</title>
+    <title>ACE-Step // NEXUS</title>
     <script src="https://unpkg.com/wavesurfer.js@7"></script>
     <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
     <style>
         :root {
             --bg-primary: #0a0a0f;
-            --bg-secondary: #15151f;
-            --bg-card: #1c1c2b;
-            --bg-input: #252538;
-            --accent-primary: #00a2ff;
-            --accent-secondary: #0077cc;
+            --bg-secondary: #111118;
+            --bg-tertiary: #1a1a24;
+            --accent-primary: #00d8ff;
+            --accent-secondary: #0099ff;
             --text-primary: #ffffff;
             --text-secondary: #a0a0c0;
             --text-muted: #6b6b8f;
-            --border: #2f2f45;
-            --success: #00d26a;
-            --warning: #ffaa00;
-            --danger: #ff4d4d;
-            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(0, 216, 255, 0.2);
+            --success: #00ff9d;
+            --warning: #ffcc00;
+            --error: #ff4d6d;
+            --glow: 0 0 15px rgba(0, 216, 255, 0.5);
         }
 
         * {
@@ -33,7 +32,7 @@
         body {
             background: var(--bg-primary);
             color: var(--text-primary);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             font-size: 14px;
             line-height: 1.6;
             margin: 0;
@@ -41,13 +40,16 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(0, 152, 255, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 216, 255, 0.03) 0%, transparent 25%);
         }
 
         /* --- Header --- */
         header {
-            background: var(--bg-secondary);
+            background: linear-gradient(90deg, var(--bg-secondary), var(--bg-tertiary));
             border-bottom: 1px solid var(--border);
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -57,22 +59,12 @@
         .app-title {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
             font-weight: 700;
-            font-size: 1.25rem;
-        }
-        .app-title::before {
-            content: "♪";
+            font-size: 1.1rem;
+            letter-spacing: 1px;
             color: var(--accent-primary);
-            font-size: 1.5rem;
-        }
-        .badge {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: black;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 0.2rem 0.5rem;
-            border-radius: 999px;
+            text-shadow: var(--glow);
         }
 
         .api-input {
@@ -85,47 +77,49 @@
             color: var(--text-muted);
         }
         #apiBase {
-            background: var(--bg-input);
+            background: var(--bg-tertiary);
             border: 1px solid var(--border);
             color: var(--text-primary);
             border-radius: 6px;
             padding: 0.5rem 0.75rem;
-            min-width: 250px;
+            width: 280px;
             font-size: 0.85rem;
+            transition: all 0.2s ease;
         }
         #apiBase:focus {
             outline: none;
             border-color: var(--accent-primary);
-            box-shadow: 0 0 0 2px rgba(0, 162, 255, 0.2);
+            box-shadow: var(--glow);
         }
 
         /* --- Main Layout --- */
         .main-container {
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 380px 1fr;
             flex: 1;
             overflow: hidden;
+            gap: 1px;
+            background: var(--border);
         }
 
         /* --- Sidebar (Control Panel) --- */
         .sidebar {
             background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
             padding: 1.5rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .control-section {
-            background: var(--bg-card);
-            border-radius: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
             padding: 1.25rem;
             border: 1px solid var(--border);
         }
         .section-title {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--accent-primary);
             margin-bottom: 1rem;
@@ -136,17 +130,12 @@
             gap: 0.5rem;
         }
         .section-title::before {
-            content: attr(data-step);
-            background: var(--accent-primary);
-            color: black;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
+            content: "";
+            display: block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 2px;
         }
 
         label {
@@ -163,11 +152,11 @@
         select,
         textarea {
             width: 100%;
-            background: var(--bg-input);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border);
             color: var(--text-primary);
-            padding: 0.75rem;
-            border-radius: 8px;
+            padding: 0.7rem;
+            border-radius: 6px;
             font-size: 0.9rem;
             outline: none;
             transition: all 0.2s ease;
@@ -176,7 +165,7 @@
         select:focus,
         textarea:focus {
             border-color: var(--accent-primary);
-            box-shadow: 0 0 0 2px rgba(0, 162, 255, 0.2);
+            box-shadow: var(--glow);
         }
         textarea {
             resize: vertical;
@@ -200,20 +189,21 @@
         }
         input[type="range"] {
             flex: 1;
-            height: 5px;
+            height: 4px;
             -webkit-appearance: none;
-            background: var(--bg-input);
-            border-radius: 3px;
+            background: var(--border);
+            border-radius: 2px;
             outline: none;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background: var(--accent-primary);
             border-radius: 50%;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            box-shadow: var(--glow);
         }
         .range-value {
             min-width: 40px;
@@ -256,9 +246,9 @@
             justify-content: center;
             gap: 0.5rem;
             padding: 2rem 1rem;
-            background: var(--bg-input);
+            background: rgba(0, 0, 0, 0.2);
             border: 2px dashed var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             color: var(--text-muted);
             text-align: center;
@@ -267,11 +257,7 @@
         .file-upload-label:hover {
             border-color: var(--accent-primary);
             color: var(--accent-primary);
-            background: rgba(0, 162, 255, 0.05);
-        }
-        .file-upload-icon {
-            font-size: 1.5rem;
-            opacity: 0.7;
+            background: rgba(0, 216, 255, 0.05);
         }
 
         .generate-btn {
@@ -280,22 +266,23 @@
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: black;
             border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(0, 162, 255, 0.3);
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
         }
         .generate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 162, 255, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 216, 255, 0.4);
         }
         .generate-btn:active {
             transform: translateY(0);
         }
         .generate-btn:disabled {
-            background: var(--bg-input);
+            background: var(--bg-tertiary);
             color: var(--text-muted);
             cursor: not-allowed;
             transform: none;
@@ -314,8 +301,8 @@
 
         /* Waveform */
         .waveform-container {
-            background: var(--bg-card);
-            border-radius: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
             padding: 1.25rem;
             border: 1px solid var(--border);
         }
@@ -338,61 +325,59 @@
             gap: 0.5rem;
         }
         .control-btn {
-            background: var(--bg-input);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border);
             color: var(--text-secondary);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
         .control-btn:hover {
-            background: var(--glass);
-            color: var(--text-primary);
+            background: var(--accent-primary);
+            color: black;
+            border-color: var(--accent-primary);
         }
         .control-btn.main {
-            width: 44px;
-            height: 44px;
-            font-size: 1.1rem;
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
             background: var(--accent-primary);
             color: black;
             border: none;
         }
-        .control-btn.main:hover {
-            transform: scale(1.05);
-            filter: brightness(1.1);
-        }
         .time-display {
             font-family: 'Roboto Mono', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--accent-primary);
-            min-width: 80px;
+            min-width: 70px;
             text-align: center;
         }
         #waveform {
             width: 100%;
             height: 100px;
             margin-bottom: 0.75rem;
+            cursor: pointer;
         }
         .region-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--accent-primary);
         }
         .clear-region-btn {
             background: none;
             border: 1px solid var(--border);
             color: var(--text-muted);
-            border-radius: 6px;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.7rem;
+            border-radius: 4px;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.65rem;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -403,15 +388,15 @@
 
         /* Status Area */
         .status-container {
-            background: var(--bg-card);
-            border-radius: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
             padding: 1.25rem;
             border: 1px solid var(--border);
         }
         .progress-bar {
-            height: 8px;
-            background: var(--bg-input);
-            border-radius: 4px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
             overflow: hidden;
             margin-bottom: 1rem;
             position: relative;
@@ -421,23 +406,23 @@
             width: 0%;
             background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
             transition: width 0.3s ease;
-            border-radius: 4px;
+            border-radius: 3px;
         }
         .progress-text {
             position: absolute;
             top: -20px;
             right: 0;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             color: var(--accent-primary);
         }
         .log-console {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             padding: 1rem;
             font-family: 'Roboto Mono', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
             height: 100px;
             overflow-y: auto;
@@ -445,12 +430,12 @@
         }
         .log-info { color: var(--text-secondary); }
         .log-success { color: var(--success); }
-        .log-error { color: var(--danger); }
+        .log-error { color: var(--error); }
         .log-progress { color: var(--accent-primary); }
 
         /* Results */
         .results-container h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 1rem;
@@ -459,23 +444,23 @@
         }
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1rem;
         }
         .result-card {
-            background: var(--bg-card);
+            background: var(--bg-tertiary);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 1rem;
             transition: all 0.2s ease;
         }
         .result-card:hover {
             border-color: var(--accent-primary);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--glow);
         }
         .result-meta {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             margin-bottom: 0.75rem;
             line-height: 1.4;
@@ -484,40 +469,40 @@
             color: var(--text-primary);
             display: block;
             margin-bottom: 0.25rem;
+            font-size: 0.85rem;
         }
         audio {
             width: 100%;
-            height: 40px;
+            height: 36px;
             margin-top: 0.5rem;
             border-radius: 6px;
         }
         .download-btn {
             display: inline-block;
-            background: var(--bg-input);
+            background: var(--bg-secondary);
             color: var(--text-primary);
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
             font-weight: 600;
             margin-top: 0.75rem;
             text-align: center;
             transition: all 0.2s;
+            border: 1px solid var(--border);
         }
         .download-btn:hover {
             background: var(--accent-primary);
             color: black;
+            border-color: var(--accent-primary);
         }
 
         /* --- Responsive Design --- */
         @media (max-width: 968px) {
             .main-container {
                 grid-template-columns: 1fr;
-                height: auto;
             }
             .sidebar {
-                border-right: none;
-                border-bottom: 1px solid var(--border);
                 order: 2;
             }
             .content-area {
@@ -532,7 +517,6 @@
                 width: 100%;
             }
             #apiBase {
-                min-width: auto;
                 width: 100%;
             }
         }
@@ -543,10 +527,10 @@
 <body>
 
 <header>
-    <div class="app-title">ACE-Step <span class="badge">NEXUS</span></div>
+    <div class="app-title">ACE-Step // NEXUS INTERFACE</div>
     <div class="api-input">
-        <label for="apiBase">API Endpoint:</label>
-        <input type="url" id="apiBase" value="http://localhost:8001" placeholder="http://localhost:8001">
+        <label for="apiBase">API ENDPOINT:</label>
+        <input type="url" id="apiBase" value="http://localhost:8001" placeholder="http://your-akash-ip">
     </div>
 </header>
 
@@ -554,20 +538,19 @@
     <aside class="sidebar">
         <!-- Section 1: Input -->
         <div class="control-section">
-            <div class="section-title" data-step="1">Source Audio</div>
+            <div class="section-title">SOURCE AUDIO</div>
             <div class="file-upload">
                 <label for="audioUpload" class="file-upload-label" id="uploadLabel">
-                    <span class="file-upload-icon">📁</span>
-                    <span>Drag & Drop or Click to Upload</span>
+                    <span>📁 DRAG & DROP OR CLICK</span>
+                    <span style="font-size: 0.7rem; margin-top: 0.5rem;">Required for Cover, Repaint, Lego & Extract</span>
                 </label>
                 <input type="file" id="audioUpload" accept="audio/*">
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Required for Cover, Repaint, Lego & Extract modes.</div>
         </div>
 
         <!-- Section 2: Task -->
         <div class="control-section">
-            <div class="section-title" data-step="2">Task Configuration</div>
+            <div class="section-title">TASK CONFIGURATION</div>
             <label for="taskType">Mode</label>
             <select id="taskType">
                 <option value="text2music">🎵 Text to Music (Generate)</option>
@@ -593,7 +576,7 @@
 
         <!-- Section 3: Creative -->
         <div class="control-section">
-            <div class="section-title" data-step="3">Creative Direction</div>
+            <div class="section-title">CREATIVE DIRECTION</div>
             <label for="prompt">Style & Description</label>
             <textarea id="prompt" placeholder="e.g. Epic cyberpunk synthwave, driving bassline, energetic, 120 BPM"></textarea>
 
@@ -603,7 +586,7 @@
 
         <!-- Section 4: Parameters -->
         <div class="control-section">
-            <div class="section-title" data-step="4">Parameters</div>
+            <div class="section-title">PARAMETERS</div>
             <div class="input-row">
                 <div>
                     <label for="vocalLanguage">Language</label>
@@ -640,14 +623,14 @@
         </div>
 
         <!-- Generate Button -->
-        <button id="submitBtn" class="generate-btn">✨ Generate</button>
+        <button id="submitBtn" class="generate-btn">⟳ GENERATE</button>
     </aside>
 
     <main class="content-area">
         <!-- Waveform Viewer -->
         <div class="waveform-container empty" id="waveform-wrapper">
             <div class="waveform-header">
-                <div class="waveform-title">Reference Audio</div>
+                <div class="waveform-title">REFERENCE AUDIO</div>
                 <div class="transport-controls">
                     <button id="wsLoopBtn" class="control-btn" title="Toggle Loop">🔁</button>
                     <button id="wsStopBtn" class="control-btn" title="Stop">⏹</button>
@@ -658,7 +641,7 @@
             <div id="waveform"></div>
             <div class="region-info">
                 <span id="regionText">Drag on waveform to select a region</span>
-                <button id="clearRegionBtn" class="clear-region-btn">Clear</button>
+                <button id="clearRegionBtn" class="clear-region-btn">CLEAR</button>
             </div>
             <input type="hidden" id="regionStart" value="0">
             <input type="hidden" id="regionEnd" value="-1">
@@ -671,13 +654,13 @@
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="log-console" id="logConsole">
-                <div class="log-info">System initialized. Ready to generate.</div>
+                <div class="log-info">// SYSTEM INITIALIZED. READY.</div>
             </div>
         </div>
 
         <!-- Results -->
         <div class="results-container">
-            <h3>Generated Output</h3>
+            <h3>GENERATED OUTPUT</h3>
             <div id="resultsGrid" class="results-grid"></div>
         </div>
     </main>
