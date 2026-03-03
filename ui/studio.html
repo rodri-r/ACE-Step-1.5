@@ -2,398 +2,682 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ACE-Step Studio (Pro)</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACE-Step Nexus</title>
     <script src="https://unpkg.com/wavesurfer.js@7"></script>
     <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
-
     <style>
         :root {
-            --bg-color: #080808;
-            --card-bg: #141414;
-            --panel-bg: #1e1e1e;
-            --accent: #1DB954; 
-            --accent-hover: #1ed760;
-            --text: #ffffff;
-            --muted: #b3b3b3;
-            --border: #333;
-            --input-bg: #2a2a2a;
-            --danger: #ff4444;
-            --gold: #FFD700;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #15151f;
+            --bg-card: #1c1c2b;
+            --bg-input: #252538;
+            --accent-primary: #00a2ff;
+            --accent-secondary: #0077cc;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0c0;
+            --text-muted: #6b6b8f;
+            --border: #2f2f45;
+            --success: #00d26a;
+            --warning: #ffaa00;
+            --danger: #ff4d4d;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
             margin: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         /* --- Header --- */
         header {
-            background: var(--card-bg);
+            background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
-            padding: 12px 20px;
+            padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            z-index: 10;
+            backdrop-filter: blur(10px);
         }
 
-        h1 { margin: 0; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
-        .badge { font-size: 0.65rem; background: var(--accent); color: black; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
-
-        .connection-bar {
+        .app-title {
             display: flex;
-            gap: 8px;
             align-items: center;
-            flex: 1;
-            justify-content: flex-end;
-            min-width: 200px;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .app-title::before {
+            content: "♪";
+            color: var(--accent-primary);
+            font-size: 1.5rem;
+        }
+        .badge {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: black;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
         }
 
-        /* --- Layout --- */
+        .api-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .api-input label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        #apiBase {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            min-width: 250px;
+            font-size: 0.85rem;
+        }
+        #apiBase:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 162, 255, 0.2);
+        }
+
+        /* --- Main Layout --- */
         .main-container {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 360px 1fr;
             flex: 1;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
-        /* --- Sidebar (Controls) --- */
+        /* --- Sidebar (Control Panel) --- */
         .sidebar {
-            background: var(--panel-bg);
+            background: var(--bg-secondary);
             border-right: 1px solid var(--border);
-            padding: 20px;
+            padding: 1.5rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 1.5rem;
         }
 
-        .control-group { margin-bottom: 0; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        input[type="text"], input[type="number"], input[type="url"], select, textarea {
-            width: 100%;
-            background: var(--input-bg);
+        .control-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
             border: 1px solid var(--border);
-            color: var(--text);
-            padding: 12px; 
-            border-radius: 8px;
-            font-size: 0.95rem; 
-            outline: none;
-            -webkit-appearance: none; 
         }
-        
-        textarea { resize: vertical; min-height: 80px; font-family: monospace; }
-        input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-
-        .row { display: flex; gap: 12px; }
-        .row > div { flex: 1; }
-
-        .range-container { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
-        input[type="range"] { flex: 1; accent-color: var(--accent); height: 20px; }
-        .range-val { width: 35px; text-align: right; font-size: 0.8rem; color: var(--accent); }
-
-        .checkbox-group { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 5px 0; }
-        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); margin: 0; }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 50px;
+        .section-title {
+            font-size: 0.8rem;
             font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
             text-transform: uppercase;
-            transition: 0.2s;
-            touch-action: manipulation;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .btn-primary { background: var(--accent); color: black; box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3); }
-        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-        .btn-primary:active { transform: translateY(1px); }
-        .btn-primary:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; transform: none; }
-
-        .file-upload { position: relative; display: inline-block; width: 100%; }
-        .file-upload input[type="file"] { display: none; }
-        .file-upload-label {
+        .section-title::before {
+            content: attr(data-step);
+            background: var(--accent-primary);
+            color: black;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px dashed var(--muted);
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--muted);
-            font-size: 0.9rem;
-            transition: 0.2s;
-            text-align: center;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
-        .file-upload-label:hover { border-color: var(--accent); color: var(--accent); background: rgba(29, 185, 84, 0.05); }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 162, 255, 0.2);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .input-row > * {
+            flex: 1;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.5rem 0;
+        }
+        input[type="range"] {
+            flex: 1;
+            height: 5px;
+            -webkit-appearance: none;
+            background: var(--bg-input);
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .range-value {
+            min-width: 40px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 0;
+        }
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-primary);
+            margin: 0;
+        }
+        .checkbox-label {
+            margin: 0;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .file-upload {
+            position: relative;
+            width: 100%;
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 2rem 1rem;
+            background: var(--bg-input);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .file-upload-label:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            background: rgba(0, 162, 255, 0.05);
+        }
+        .file-upload-icon {
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: black;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 20px rgba(0, 162, 255, 0.3);
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 162, 255, 0.4);
+        }
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        .generate-btn:disabled {
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
         /* --- Content Area --- */
         .content-area {
-            padding: 20px;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 1.5rem;
             overflow-y: auto;
-            background: linear-gradient(135deg, #101010 0%, #080808 100%);
+            background: var(--bg-primary);
         }
 
-        #waveform-wrapper {
-            background: #111;
+        /* Waveform */
+        .waveform-container {
+            background: var(--bg-card);
             border-radius: 12px;
-            padding: 15px;
-            border: 1px solid #333;
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
         }
-        #waveform-wrapper.empty { display: none; }
-        #waveform { width: 100%; }
-        
-        .region-info {
-            font-size: 0.8rem;
-            color: var(--gold);
-            margin-top: 12px;
+        .waveform-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
-
-        .transport-controls { display: flex; align-items: center; gap: 8px; }
-        .btn-icon {
-            background: rgba(255,255,255,0.1);
+        .waveform-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .transport-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .control-btn {
+            background: var(--bg-input);
             border: 1px solid var(--border);
-            color: var(--text);
-            width: 36px; height: 36px;
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.2s; font-size: 0.9rem; padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
         }
-        .btn-icon:hover { background: rgba(255,255,255,0.2); border-color: var(--accent); }
-        .btn-icon.active { background: var(--accent); color: black; border-color: var(--accent); }
-        .btn-icon.main { width: 44px; height: 44px; font-size: 1.1rem; background: var(--accent); color: black; border:none; }
-        .btn-icon.main:hover { transform: scale(1.05); filter: brightness(1.1); }
-
-        /* --- Logs & Smart Progress --- */
-        .log-console {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            font-family: 'Courier New', monospace;
+        .control-btn:hover {
+            background: var(--glass);
+            color: var(--text-primary);
+        }
+        .control-btn.main {
+            width: 44px;
+            height: 44px;
+            font-size: 1.1rem;
+            background: var(--accent-primary);
+            color: black;
+            border: none;
+        }
+        .control-btn.main:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        .time-display {
+            font-family: 'Roboto Mono', monospace;
             font-size: 0.8rem;
-            color: #ccc;
-            height: 120px;
-            overflow-y: auto;
-            white-space: pre-wrap;
+            color: var(--accent-primary);
+            min-width: 80px;
+            text-align: center;
         }
-        .log-info { color: #888; }
-        .log-success { color: var(--accent); }
-        .log-error { color: var(--danger); }
-        .log-progress { color: var(--gold); }
+        #waveform {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 0.75rem;
+        }
+        .region-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--accent-primary);
+        }
+        .clear-region-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .clear-region-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
 
-        .progress-container {
+        /* Status Area */
+        .status-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+        }
+        .progress-bar {
             height: 8px;
-            background: rgba(255,255,255,0.1);
+            background: var(--bg-input);
             border-radius: 4px;
             overflow: hidden;
-            margin-bottom: 10px;
-            display: none; /* Hidden until needed */
+            margin-bottom: 1rem;
             position: relative;
         }
         .progress-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 100%);
-            transition: width 0.2s linear; /* Smooth linear movement */
-            box-shadow: 0 0 15px rgba(29, 185, 84, 0.5);
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.3s ease;
+            border-radius: 4px;
         }
-        
-        .progress-text-overlay {
+        .progress-text {
             position: absolute;
             top: -20px;
             right: 0;
             font-size: 0.75rem;
-            color: var(--accent);
-            font-weight: bold;
+            font-weight: 700;
+            color: var(--accent-primary);
         }
+        .log-console {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            height: 100px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .log-info { color: var(--text-secondary); }
+        .log-success { color: var(--success); }
+        .log-error { color: var(--danger); }
+        .log-progress { color: var(--accent-primary); }
 
+        /* Results */
+        .results-container h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
         }
         .result-card {
-            background: var(--panel-bg);
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 15px;
-            transition: transform 0.2s;
+            padding: 1rem;
+            transition: all 0.2s ease;
         }
-        .result-card:hover { border-color: var(--accent); }
-        .result-meta { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
-        audio { width: 100%; margin-top: 5px; height: 40px; }
+        .result-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .result-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        .result-meta strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        audio {
+            width: 100%;
+            height: 40px;
+            margin-top: 0.5rem;
+            border-radius: 6px;
+        }
+        .download-btn {
+            display: inline-block;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .download-btn:hover {
+            background: var(--accent-primary);
+            color: black;
+        }
 
-        @media (max-width: 768px) {
-            body { height: auto; min-height: 100vh; overflow-y: auto; }
-            .main-container { display: flex; flex-direction: column; overflow: visible; height: auto; }
-            header { position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); overflow: visible; padding: 20px 15px; }
-            .content-area { overflow: visible; padding: 15px; min-height: 500px; }
-            .connection-bar { width: 100%; margin-top: 5px; }
-            .connection-bar label { display: none; }
+        /* --- Responsive Design --- */
+        @media (max-width: 968px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                order: 2;
+            }
+            .content-area {
+                order: 1;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .api-input {
+                width: 100%;
+            }
+            #apiBase {
+                min-width: auto;
+                width: 100%;
+            }
         }
+        .hidden { display: none; }
+        .empty { display: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>ACE-Step Studio <span class="badge">PRO</span></h1>
-    <div class="connection-bar">
-        <input type="url" id="apiBase" value="http://localhost:8001" placeholder="API URL (e.g. http://localhost:8001)">
+    <div class="app-title">ACE-Step <span class="badge">NEXUS</span></div>
+    <div class="api-input">
+        <label for="apiBase">API Endpoint:</label>
+        <input type="url" id="apiBase" value="http://localhost:8001" placeholder="http://localhost:8001">
     </div>
 </header>
 
 <div class="main-container">
     <aside class="sidebar">
-        <!-- Audio Input -->
-        <div class="control-group">
-            <label>1. Source Audio (Reference)</label>
+        <!-- Section 1: Input -->
+        <div class="control-section">
+            <div class="section-title" data-step="1">Source Audio</div>
             <div class="file-upload">
-                <label for="audioUpload" class="file-upload-label" id="uploadLabel">📁 Tap to Upload Audio</label>
+                <label for="audioUpload" class="file-upload-label" id="uploadLabel">
+                    <span class="file-upload-icon">📁</span>
+                    <span>Drag & Drop or Click to Upload</span>
+                </label>
                 <input type="file" id="audioUpload" accept="audio/*">
             </div>
-            <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">Required for Cover, Repaint, Lego & Extract.</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Required for Cover, Repaint, Lego & Extract modes.</div>
         </div>
 
-        <!-- Task Configuration -->
-        <div class="control-group">
-            <label for="taskType">2. Task Mode</label>
+        <!-- Section 2: Task -->
+        <div class="control-section">
+            <div class="section-title" data-step="2">Task Configuration</div>
+            <label for="taskType">Mode</label>
             <select id="taskType">
-                <option value="text2music">Text to Music (Generate)</option>
-                <option value="cover">Style Transfer (Cover)</option>
-                <option value="repaint">In-Painting (Repaint)</option>
-                <option value="lego">Add Layer (Lego)</option>
-                <option value="extract">Isolate Layer (Extract)</option>
-                <option value="complete">Complete / Extend</option>
+                <option value="text2music">🎵 Text to Music (Generate)</option>
+                <option value="cover">🎭 Style Transfer (Cover)</option>
+                <option value="repaint">🖌️ In-Painting (Repaint)</option>
+                <option value="lego">🧱 Add Layer (Lego)</option>
+                <option value="extract">🔍 Isolate Layer (Extract)</option>
+                <option value="complete">↗️ Complete / Extend</option>
             </select>
+
+            <div id="trackNameGroup" class="hidden" style="margin-top: 1rem;">
+                <label for="trackName">Target Instrument</label>
+                <select id="trackName">
+                    <option value="vocals">Vocals</option>
+                    <option value="drums">Drums</option>
+                    <option value="bass">Bass</option>
+                    <option value="guitar">Guitar</option>
+                    <option value="piano">Piano</option>
+                    <option value="synth">Synth</option>
+                </select>
+            </div>
         </div>
 
-        <div class="control-group" id="trackNameGroup" style="display:none;">
-            <label for="trackName">Target Layer</label>
-            <select id="trackName">
-                <option value="vocals">Vocals</option>
-                <option value="drums">Drums</option>
-                <option value="bass">Bass</option>
-                <option value="guitar">Guitar</option>
-                <option value="piano">Piano</option>
-                <option value="synth">Synth</option>
-            </select>
-        </div>
+        <!-- Section 3: Creative -->
+        <div class="control-section">
+            <div class="section-title" data-step="3">Creative Direction</div>
+            <label for="prompt">Style & Description</label>
+            <textarea id="prompt" placeholder="e.g. Epic cyberpunk synthwave, driving bassline, energetic, 120 BPM"></textarea>
 
-        <div class="control-group">
-            <label for="prompt">3. Style / Description</label>
-            <textarea id="prompt" placeholder="e.g. 80s pop song, upbeat, female vocals"></textarea>
-        </div>
-
-        <div class="control-group">
-            <label for="lyrics">Lyrics (Optional)</label>
+            <label for="lyrics" style="margin-top: 1rem;">Lyrics (Optional)</label>
             <textarea id="lyrics" placeholder="[Verse 1]&#10;..." style="min-height: 60px;"></textarea>
         </div>
 
-        <div class="control-group">
-            <label>4. Parameters</label>
-            <div class="row">
+        <!-- Section 4: Parameters -->
+        <div class="control-section">
+            <div class="section-title" data-step="4">Parameters</div>
+            <div class="input-row">
                 <div>
-                    <label>Language</label>
-                    <input type="text" id="vocalLanguage" value="en" placeholder="en/nl/fr">
+                    <label for="vocalLanguage">Language</label>
+                    <input type="text" id="vocalLanguage" value="en" placeholder="en">
                 </div>
                 <div>
-                    <label>Duration (s)</label>
+                    <label for="duration">Duration (s)</label>
                     <input type="number" id="duration" value="30" min="10" max="300">
                 </div>
             </div>
-            <div class="row" style="margin-top: 10px;">
+            <div class="input-row" style="margin-top: 0.75rem;">
                 <div>
-                    <label>Steps</label>
+                    <label for="steps">Steps</label>
                     <input type="number" id="steps" value="8" min="1" max="50">
                 </div>
                 <div>
-                    <label>CFG Scale</label>
+                    <label for="guidance">CFG Scale</label>
                     <input type="number" id="guidance" value="7.0" step="0.5">
                 </div>
             </div>
-        </div>
 
-        <div class="control-group" id="strengthGroup" style="display:none;">
-            <label>Audio Influence</label>
-            <div class="range-container">
-                <span style="font-size:0.7rem">Creative</span>
-                <input type="range" id="strength" min="0" max="100" value="40">
-                <span class="range-val" id="strengthVal">0.4</span>
+            <div id="strengthGroup" class="hidden" style="margin-top: 1rem;">
+                <label>Audio Influence</label>
+                <div class="range-container">
+                    <input type="range" id="strength" min="0" max="100" value="40">
+                    <span class="range-value" id="strengthVal">0.4</span>
+                </div>
+            </div>
+
+            <div class="checkbox-container" style="margin-top: 1rem;">
+                <input type="checkbox" id="thinking" checked>
+                <label for="thinking" class="checkbox-label">Use Reasoning (Thinking)</label>
             </div>
         </div>
 
-        <div class="checkbox-group">
-            <input type="checkbox" id="thinking" checked>
-            <label for="thinking" style="margin:0; color: #fff; font-size: 0.9rem;">Use Reasoning (Thinking)</label>
-        </div>
-
-        <div style="margin-top: 10px;">
-            <button id="submitBtn" class="btn btn-primary">✨ Generate Music</button>
-        </div>
+        <!-- Generate Button -->
+        <button id="submitBtn" class="generate-btn">✨ Generate</button>
     </aside>
 
     <main class="content-area">
-        <div id="waveform-wrapper" class="empty">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap: wrap; gap: 10px;">
-                <h3 style="margin: 0; font-size: 0.9rem; color: #888;">Reference Audio</h3>
+        <!-- Waveform Viewer -->
+        <div class="waveform-container empty" id="waveform-wrapper">
+            <div class="waveform-header">
+                <div class="waveform-title">Reference Audio</div>
                 <div class="transport-controls">
-                    <button id="wsLoopBtn" class="btn-icon" title="Toggle Loop">🔁</button>
-                    <button id="wsStopBtn" class="btn-icon" title="Stop">⏹</button>
-                    <button id="wsPlayBtn" class="btn-icon main" title="Play/Pause">▶</button>
-                    <span id="wsTimeDisplay" style="font-family:monospace; font-size:0.8rem; color:var(--accent); margin-left:8px; min-width: 80px; text-align:right;">0:00</span>
+                    <button id="wsLoopBtn" class="control-btn" title="Toggle Loop">🔁</button>
+                    <button id="wsStopBtn" class="control-btn" title="Stop">⏹</button>
+                    <button id="wsPlayBtn" class="control-btn main" title="Play/Pause">▶</button>
+                    <span id="wsTimeDisplay" class="time-display">0:00</span>
                 </div>
             </div>
             <div id="waveform"></div>
             <div class="region-info">
-                <span id="regionText" style="flex: 1;">No region selected</span>
-                <button id="clearRegionBtn" style="background:none; border:1px solid #444; color:#888; border-radius:4px; cursor:pointer; font-size:0.7rem; padding: 4px 8px;">Clear</button>
+                <span id="regionText">Drag on waveform to select a region</span>
+                <button id="clearRegionBtn" class="clear-region-btn">Clear</button>
             </div>
+            <input type="hidden" id="regionStart" value="0">
+            <input type="hidden" id="regionEnd" value="-1">
         </div>
 
-        <input type="hidden" id="regionStart" value="0">
-        <input type="hidden" id="regionEnd" value="-1">
-
-        <div id="statusArea">
-            <div class="progress-container" id="progressContainer">
-                <span id="progressText" class="progress-text-overlay">0%</span>
+        <!-- Status & Logs -->
+        <div class="status-container">
+            <div class="progress-bar" id="progressContainer">
+                <span id="progressText" class="progress-text">0%</span>
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="log-console" id="logConsole">
-                <div>Welcome to ACE-Step Studio. Ready.</div>
+                <div class="log-info">System initialized. Ready to generate.</div>
             </div>
         </div>
 
-        <div>
-            <h3 style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; font-size: 1rem;">Generated Results</h3>
+        <!-- Results -->
+        <div class="results-container">
+            <h3>Generated Output</h3>
             <div id="resultsGrid" class="results-grid"></div>
         </div>
     </main>
@@ -683,8 +967,8 @@
         if (!file) return;
         uploadedFile = file;
         elements.uploadLabel.innerText = "✅ " + file.name;
-        elements.uploadLabel.style.borderColor = "var(--accent)";
-        elements.uploadLabel.style.color = "var(--accent)";
+        elements.uploadLabel.style.borderColor = "var(--accent-primary)";
+        elements.uploadLabel.style.color = "var(--accent-primary)";
         elements.waveformWrapper.classList.remove('empty');
         initWaveSurfer();
         wavesurfer.load(URL.createObjectURL(file));
@@ -913,7 +1197,7 @@
                 ${metaHtml}
                 <audio controls src="${fullUrl}"></audio>
                 <div style="margin-top:12px; display:flex; gap:10px;">
-                    <a href="${fullUrl}" download class="btn" style="padding:10px; font-size:0.8rem; background:#333; text-decoration:none; color:white; text-align:center;">Download</a>
+                    <a href="${fullUrl}" download class="download-btn">Download</a>
                 </div>
             `;
 
